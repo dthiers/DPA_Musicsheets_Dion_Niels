@@ -17,3 +17,4 @@ C:\Users\mmaaschu\Documents\GitHub\DPA_Startup_Musicsheets\DPA_Musicsheets\obj\D
 C:\Users\mmaaschu\Documents\GitHub\DPA_Startup_Musicsheets\DPA_Musicsheets\obj\Debug\DPA_Musicsheets.exe
 C:\Users\mmaaschu\Documents\GitHub\DPA_Startup_Musicsheets\DPA_Musicsheets\obj\Debug\DPA_Musicsheets.pdb
 C:\Users\mmaaschu\Documents\GitHub\DPA_Startup_Musicsheets\DPA_Musicsheets\bin\Debug\Sanford.Multimedia.Midi.pdb
+C:\Users\Dion Thiers\Documents\GitHub\DPA_Musicsheets_Dion_Niels\DPA_Musicsheets\bin\Debug\DPA_Musicsheets.exe.config
