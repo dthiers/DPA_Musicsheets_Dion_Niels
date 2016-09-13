@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DPA_Musicsheets
+namespace DPA_Core
 {
     public class MidiTrack
     {
         public string TrackName { get; set; }
         public ObservableCollection<string> Messages { get; private set; }
-
+        
         public MidiTrack()
         {
             this.Messages = new ObservableCollection<string>();

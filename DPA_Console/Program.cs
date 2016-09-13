@@ -11,9 +11,6 @@ namespace DPA_Console
     {
         static void Main(string[] args)
         {
-            Note note = new Note();
-
-            Console.WriteLine(note.call_self());
 
             Console.ReadKey();
         }

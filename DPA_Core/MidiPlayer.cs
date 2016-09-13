@@ -1,22 +1,23 @@
 ﻿using Sanford.Multimedia.Midi;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
 
-namespace DPA_Musicsheets
+namespace DPA_Core
 {
     public class MidiPlayer : IDisposable
     {
         private OutputDevice _outDevice;
-        
-        // De inhoud voor de midi file. Hier zitten onder andere tracks en metadata in.
+
+        // De inhoud voor de midi file ==> alle tracks + metaData
         private Sequence _sequence;
 
-        // De sequencer maakt het mogelijk om een sequence af te spelen.
-        // Deze heeft een timer en geeft events op de juiste momenten.
+        // De midi speler
+        // Deze maakt het mogelijk om een seuqence af te spelen
+        // Heeft een timer en geeft event op de juiste momenten
         private Sequencer _sequencer;
 
         public MidiPlayer(OutputDevice outputDevice)
@@ -24,19 +25,16 @@ namespace DPA_Musicsheets
             _outDevice = outputDevice;
             _sequencer = new Sequencer();
 
-            // Wanneer een channelmessage langskomt sturen we deze direct door naar onze audio.
-            // Channelmessages zijn tonen met commands als NoteOn en NoteOff
-            // In midi wordt elke noot gespeeld totdat NoteOff is benoemd. Wanneer dus nooit een NoteOff komt nadat die een NoteOn heeft gehad
-            // zal deze note dus oneindig lang blijven spelen.
+            // Wanneer een channelMessage langskomt wordt deze meteen doorgestuurd naar de audio
             _sequencer.ChannelMessagePlayed += ChannelMessagePlayed;
 
-            // Wanneer de sequence klaar is moeten we alles closen en stoppen.
+            // Wanneer de sequence klaar is ==> EndOfTrack event, moet alles geclosed worden
             _sequencer.PlayingCompleted += (playingSender, playingEvent) =>
             {
                 _sequencer.Stop();
             };
         }
-        
+
         public void Play(string midiFileLocation)
         {
             this._sequence = new Sequence();
@@ -50,7 +48,7 @@ namespace DPA_Musicsheets
             this._sequencer.Sequence = this._sequence;
             StartPlaying();
         }
-        
+
         private void OnSequenceLoadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             _sequencer.Sequence = _sequence;

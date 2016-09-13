@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel;
 
-namespace DPA_Musicsheets
+namespace DPA_Core
 {
     public static class MidiReader
     {
@@ -20,43 +19,55 @@ namespace DPA_Musicsheets
 
         public static IEnumerable<MidiTrack> ReadSequence(Sequence sequence)
         {
-            // De sequence heeft tracks. Deze zijn per index benaderbaar.
-            for (int i = 0; i < sequence.Count; i++)
+            //throw new NotImplementedException();
+            // Sequence is de midi file. Elke sequence bestaat uit 1 of meerdere tracks
+            // Die tracks zijn iteratable
+            for(int i = 0; i < sequence.Count; i++)
             {
-                Track track = sequence[i];
-                MidiTrack trackLog = new MidiTrack() { TrackName = i.ToString() };
+                // Van elke track in de sequence een 
+                Track track = sequence[i];              // Sanford track
+                MidiTrack trackLog = new MidiTrack()    // Eigen Miditrack
+                {
+                    TrackName = i.ToString()
+                };
 
                 foreach (var midiEvent in track.Iterator())
                 {
-                    // Elke messagetype komt ook overeen met een class. Daarom moet elke keer gecast worden.
+                    // MessageType komt overeen met een class
+                    // Daarom moet elke keer gecast worden.
                     switch (midiEvent.MidiMessage.MessageType)
                     {
-                        // ChannelMessages zijn de inhoudelijke messages.
                         case MessageType.Channel:
+                            // De midiEvents in de MidiTrack trackLog in de collection messages zetten
                             var channelMessage = midiEvent.MidiMessage as ChannelMessage;
-                            // Data1: De keycode. 0 = laagste C, 1 = laagste C#, 2 = laagste D etc.
-                            // 160 is centrale C op piano.
                             trackLog.Messages.Add(String.Format("Keycode: {0}, Command: {1}, absolute time: {2}, delta time: {3}"
-                                , channelMessage.Data1, channelMessage.Command, midiEvent.AbsoluteTicks, midiEvent.DeltaTicks));
+                                 , channelMessage.Data1, channelMessage.Command, midiEvent.AbsoluteTicks, midiEvent.DeltaTicks));
                             break;
+
                         case MessageType.SystemExclusive:
                             break;
+
                         case MessageType.SystemCommon:
                             break;
+
                         case MessageType.SystemRealtime:
                             break;
-                        // Meta zegt iets over de track zelf.
+
                         case MessageType.Meta:
                             var metaMessage = midiEvent.MidiMessage as MetaMessage;
                             trackLog.Messages.Add(GetMetaString(metaMessage));
-                            if (metaMessage.MetaType == MetaType.TrackName)
+                            // TrackName achter de naam van MidiTrack trackLog plaatsen
+                            if(metaMessage.MetaType == MetaType.TrackName)
                             {
                                 trackLog.TrackName += " " + Encoding.Default.GetString(metaMessage.GetBytes());
                             }
+
                             break;
+
                         default:
                             trackLog.Messages.Add(String.Format("MidiEvent {0}, absolute ticks: {1}, deltaTicks: {2}", midiEvent.MidiMessage.MessageType, midiEvent.AbsoluteTicks, midiEvent.DeltaTicks));
                             break;
+
                     }
                 }
 
